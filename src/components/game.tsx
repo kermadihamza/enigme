@@ -12,10 +12,10 @@ const enigmes = [
   { question: "Quel modèle de voiture avons-nous loué lors de notre premier road trip ensemble ? Modèle, pas la marque", reponse: "Polo" },
   { question: "La première nuit que nous avons passée ensemble, à quelle date correspond-elle ?", reponse: "10/10/2021" },
   { question: "Tu m'avais envoyé une playlist avec des styles musicaux pendant que j'étais à Lyon. Quel était le style musical ?", reponse: "K-Pop" },
-  { question: "Quel film avons-nous regardé ensemble lors de notre première soirée cinéma ?", reponse: "Film F" },
-  { question: "Quel plat as-tu cuisiné pour moi lors de notre première soirée à la maison ?", reponse: "Plat G" },
-  { question: "Le premier baiser que nous avons échangé a eu lieu dans cet endroit. Où étions-nous ?", reponse: "Lieu H" },
-  { question: "Quel était le premier cadeau que je t'ai offert lors de notre anniversaire ?", reponse: "Cadeau I" }
+  { question: "Mais c'est qui ... ?", reponse: "Aly" },
+  { question: "Le premier jeudi ou je suis venu faire une soirée jeux de societes, qu'est ce que j'qi été acheter au carrefour et que je n'ai pas utilisé ?", reponse: "Capotes" },
+  { question: "Dans quel parc avons-nous fait une longue balade ensemble lors de notre première sortie ?", reponse: "Parc du Cinquantenaire" },
+  { question: "Quel artiste on a vu en premier aux Ardentes ?", reponse: "Niro" }
 ];
 
 // Composants stylisés
