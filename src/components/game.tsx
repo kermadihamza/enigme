@@ -119,12 +119,18 @@ const ModalContainer = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 300px;
   margin: 0 auto;
-  position: absolute;
-  top: 20%;
+  position: fixed;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);  // Centrage dynamique sur la page
   border: 2px solid #d94e8c;
   z-index: 100;
+
+  // Adaptation pour les petits écrans
+  @media (max-width: 600px) {
+    width: 90%;
+    padding: 20px;
+  }
 `;
 
 const Button = styled.button`
