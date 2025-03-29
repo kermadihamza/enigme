@@ -173,18 +173,25 @@ const CongratulationMessage = styled.div`
 `;
 
 export default function EnigmeGame() {
-  const motsTrouvesFromStorage = localStorage.getItem("motsTrouves");
-  const motsTrouvesInitial = motsTrouvesFromStorage ? JSON.parse(motsTrouvesFromStorage) : [];
+  // Charger les données depuis localStorage lors du montage du composant
+  const [motsTrouves, setMotsTrouves] = useState<string[]>([]);
+  const [enigmeActuelleIndex, setEnigmeActuelleIndex] = useState<number>(0);
 
-  const enigmeActuelleIndexFromStorage = localStorage.getItem("enigmeActuelleIndex");
-  const enigmeActuelleIndexInitial = enigmeActuelleIndexFromStorage ? parseInt(enigmeActuelleIndexFromStorage) : 0;
+  useEffect(() => {
+    // Charger les données du localStorage au premier rendu
+    const motsTrouvesFromStorage = localStorage.getItem("motsTrouves");
+    const motsTrouvesInitial = motsTrouvesFromStorage ? JSON.parse(motsTrouvesFromStorage) : [];
+    setMotsTrouves(motsTrouvesInitial);
 
-  const [motsTrouves, setMotsTrouves] = useState(motsTrouvesInitial);
+    const enigmeActuelleIndexFromStorage = localStorage.getItem("enigmeActuelleIndex");
+    const enigmeActuelleIndexInitial = enigmeActuelleIndexFromStorage ? parseInt(enigmeActuelleIndexFromStorage) : 0;
+    setEnigmeActuelleIndex(enigmeActuelleIndexInitial);
+  }, []);
+
   const [openModal, setOpenModal] = useState(false);
   const [selectedEnigme, setSelectedEnigme] = useState<any>(null);
   const [input, setInput] = useState("");
-  const [erreur, setErreur] = useState("");  
-  const [enigmeActuelleIndex, setEnigmeActuelleIndex] = useState<number>(enigmeActuelleIndexInitial);
+  const [erreur, setErreur] = useState("");
 
   const verifierReponse = () => {
     if (input.trim().toLowerCase() === selectedEnigme.reponse.toLowerCase()) {
@@ -193,8 +200,9 @@ export default function EnigmeGame() {
       localStorage.setItem("motsTrouves", JSON.stringify(nouveauxMots));
       setOpenModal(false);
       setInput("");
-      setErreur("");  
+      setErreur("");
       setEnigmeActuelleIndex(enigmeActuelleIndex + 1);
+      localStorage.setItem("enigmeActuelleIndex", (enigmeActuelleIndex + 1).toString());
     } else {
       setErreur("T'es éclaté, c'est faux... Retente chacal !");
     }
@@ -206,7 +214,7 @@ export default function EnigmeGame() {
     }
     setSelectedEnigme(enigme);
     setOpenModal(true);
-    setErreur("");  
+    setErreur("");
   };
 
   const closeModal = () => {
@@ -218,8 +226,8 @@ export default function EnigmeGame() {
     localStorage.removeItem("motsTrouves");
     localStorage.removeItem("enigmeActuelleIndex");
     setMotsTrouves([]);
-    setErreur("");  
-    setEnigmeActuelleIndex(0); 
+    setErreur("");
+    setEnigmeActuelleIndex(0);
   };
 
   const hasWon = motsTrouves.length === enigmes.length;
@@ -262,7 +270,7 @@ export default function EnigmeGame() {
         </ModalContainer>
       )}
 
-      <ResetButton onClick={resetGame}>Réinitialiser le jeu</ResetButton>
+      <ResetButton onClick={resetGame}>Réinitialiser le jeu, ne le fait pas chacal</ResetButton>
 
       {hasWon && <CongratulationMessage>Félicitations ! Envoie fesses et bon retour🎉</CongratulationMessage>}
     </Container>
