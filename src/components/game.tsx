@@ -227,7 +227,7 @@ export default function EnigmeGame() {
   return (
     <Container>
       <Header>Souviens-toi de Nous !</Header>
-      <Title>Réponds et Gagne : Une Journée Sur Mesure pour mon ex préférée</Title>
+      <Title>Réponds et Gagne : Une Journée sur mesure pour mon ex préférée</Title>
       <Description>
         Hellooooooow ! J'ai eu une idée de petit jeu pendant ton voyage. C’est un jeu facile, et il y a une question par jour. Chaque jour, tu vas répondre à une question sur nous et nos souvenirs. Si tu réponds correctement à toutes les questions, une soirée spéciale sera organisée pour toi !
       </Description>
