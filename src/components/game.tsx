@@ -25,148 +25,85 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f8f9fa;
-  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+  font-family: 'Poppins', sans-serif;
   padding: 20px;
   color: #333;
+  text-align: center;
 `;
 
 const Header = styled.header`
   width: 100%;
-  background-color: #d94e8c;
-  padding: 30px;
-  text-align: center;
+  padding: 20px;
+  background-color: #ff4b5c;
   color: white;
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: bold;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const Title = styled.h1`
-  font-size: 2.5rem;
-  color: #d94e8c;
-  margin-bottom: 20px;
-`;
-
-const Description = styled.p`
-  font-size: 1.1rem;
-  color: #555;
-  margin-bottom: 20px;
-  max-width: 700px;
   text-align: center;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background-color: #ff4b5c;
 `;
 
 const Section = styled.section`
   width: 100%;
-  max-width: 1000px;
-  margin-top: 30px;
+  max-width: 500px;
+  margin-top: 80px; /* Ajout d'un espacement pour le header fixe */
   padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 `;
 
-const GridContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
+const Title = styled.h1`
+  font-size: 2rem;
+  color: #ff4b5c;
+  margin-bottom: 20px;
 `;
 
-const EnvelopeImage = styled.img`
-  width: 150px;
-  height: 150px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: scale(1.1);
-  }
+const Question = styled.h2`
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
 `;
 
-const Arrow = styled.div`
-  position: absolute;
-  top: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 384px;
-  height: 84px;
-  background-image: url('/arrow.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  animation: bounce 1s infinite;
-
-  @keyframes bounce {
-    0% {
-      transform: translateX(-50%) translateY(0);
-    }
-    50% {
-      transform: translateX(-50%) translateY(-5px);
-    }
-    100% {
-      transform: translateX(-50%) translateY(0);
-    }
-  }
-`;
-
-const ModalContainer = styled.div`
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  margin: 0 auto;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);  // Centrage dynamique sur la page
-  border: 2px solid #d94e8c;
-  z-index: 100;
-
-  // Adaptation pour les petits écrans
-  @media (max-width: 600px) {
-    width: 90%;
-    padding: 20px;
-  }
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #ff4b5c;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  text-align: center;
 `;
 
 const Button = styled.button`
-  padding: 10px;
-  background-color: #d94e8c;
+  padding: 12px;
+  background: #ff4b5c;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   width: 100%;
   margin-top: 10px;
+  transition: background 0.3s ease;
 
   &:hover {
-    background-color: #c4376c;
+    background: #e43a4e;
   }
 `;
 
-const InputField = styled.input`
-  padding: 10px;
-  width: 100%;
-  margin-bottom: 20px;
-  border: 1px solid #d94e8c;
-  border-radius: 5px;
-`;
-
-const ErrorMessage = styled.p`
-  color: red;
-  font-size: 14px;
-  margin-top: 10px;
-`;
-
 const ResetButton = styled(Button)`
-  background-color: #ff5050;
+  background: #555;
+  margin-top: 10px;
+
   &:hover {
-    background-color: #e44d4d;
+    background: #333;
   }
 `;
 
@@ -179,106 +116,54 @@ const CongratulationMessage = styled.div`
 `;
 
 export default function EnigmeGame() {
-  // Charger les données depuis localStorage lors du montage du composant
-  const [motsTrouves, setMotsTrouves] = useState<string[]>([]);
-  const [enigmeActuelleIndex, setEnigmeActuelleIndex] = useState<number>(0);
+  const storedIndex = localStorage.getItem("enigmeIndex");
+  const [index, setIndex] = useState(() => storedIndex ? parseInt(storedIndex) : 0);  // Handle null case
+  const [reponse, setReponse] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    // Charger les données du localStorage au premier rendu
-    const motsTrouvesFromStorage = localStorage.getItem("motsTrouves");
-    const motsTrouvesInitial = motsTrouvesFromStorage ? JSON.parse(motsTrouvesFromStorage) : [];
-    setMotsTrouves(motsTrouvesInitial);
-
-    const enigmeActuelleIndexFromStorage = localStorage.getItem("enigmeActuelleIndex");
-    const enigmeActuelleIndexInitial = enigmeActuelleIndexFromStorage ? parseInt(enigmeActuelleIndexFromStorage) : 0;
-    setEnigmeActuelleIndex(enigmeActuelleIndexInitial);
-  }, []);
-
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedEnigme, setSelectedEnigme] = useState<any>(null);
-  const [input, setInput] = useState("");
-  const [erreur, setErreur] = useState("");
+    localStorage.setItem("enigmeIndex", index.toString());  // Ensure index is a string
+  }, [index]);
 
   const verifierReponse = () => {
-    if (input.trim().toLowerCase() === selectedEnigme.reponse.toLowerCase()) {
-      const nouveauxMots = [...motsTrouves, selectedEnigme.reponse];
-      setMotsTrouves(nouveauxMots);
-      localStorage.setItem("motsTrouves", JSON.stringify(nouveauxMots));
-      setOpenModal(false);
-      setInput("");
-      setErreur("");
-      setEnigmeActuelleIndex(enigmeActuelleIndex + 1);
-      localStorage.setItem("enigmeActuelleIndex", (enigmeActuelleIndex + 1).toString());
+    if (reponse.trim().toLowerCase() === enigmes[index].reponse.toLowerCase()) {
+      setMessage("Bravo ! 🎉");
+      setTimeout(() => {
+        setMessage("");
+        setReponse("");
+        if (index < enigmes.length - 1) {
+          setIndex(index + 1);
+        } else {
+          setMessage("Félicitations, tu as fini toutes les énigmes ! 🎊");
+        }
+      }, 1500);
     } else {
-      setErreur("T'es éclaté, c'est faux... Retente chacal !");
+      setMessage("Mauvaise réponse, réessaie ! ❌");
+      setTimeout(() => setMessage(""), 1500);
     }
-  };
-
-  const openEnigmeModal = (enigme: any, index: number) => {
-    if (index > enigmeActuelleIndex) {
-      return;
-    }
-    setSelectedEnigme(enigme);
-    setOpenModal(true);
-    setErreur("");
-  };
-
-  const closeModal = () => {
-    setOpenModal(false);
-    setSelectedEnigme(null);
   };
 
   const resetGame = () => {
-    localStorage.removeItem("motsTrouves");
-    localStorage.removeItem("enigmeActuelleIndex");
-    setMotsTrouves([]);
-    setErreur("");
-    setEnigmeActuelleIndex(0);
+    setIndex(0);
+    localStorage.removeItem("enigmeIndex");
+    setReponse("");  // Clear response input as well
   };
-
-  const hasWon = motsTrouves.length === enigmes.length;
 
   return (
     <Container>
-      <Header>Souviens-toi de Nous !</Header>
-      <Title>Réponds et Gagne : Une Journée sur mesure pour mon ex préférée</Title>
-      <Description>
-        Hellooooooow ! J'ai eu une idée de petit jeu pendant ton voyage. C’est un jeu facile, et il y a une question par jour. Chaque jour, tu vas répondre à une question sur nous et nos souvenirs. Si tu réponds correctement à toutes les questions, une soirée spéciale sera organisée pour toi !
-      </Description>
-
+      <Header>Souviens-toi de nous 🔍</Header> {/* Nouveau header */}
       <Section>
-        <GridContainer>
-          {enigmes.map((enigme, index) => (
-            <div key={enigme.question} style={{ position: "relative" }}>
-              {index === enigmeActuelleIndex && <Arrow />}
-              <EnvelopeImage
-                src="/env.png"
-                alt="Enveloppe"
-                onClick={() => openEnigmeModal(enigme, index)}
-              />
-            </div>
-          ))}
-        </GridContainer>
+        <Question>{enigmes[index].question}</Question>
+        <Input 
+          type="text" 
+          value={reponse} 
+          onChange={(e) => setReponse(e.target.value)} 
+          placeholder="Ta réponse ici..." 
+        />
+        <Button onClick={verifierReponse}>Valider</Button>
+        <ResetButton onClick={resetGame}>Réinitialiser</ResetButton>
+        {message && <CongratulationMessage>{message}</CongratulationMessage>}
       </Section>
-
-      {openModal && selectedEnigme && (
-        <ModalContainer>
-          <h3>{selectedEnigme.question}</h3>
-          <InputField
-            type="text"
-            placeholder="Entrez votre réponse"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          {erreur && <ErrorMessage>{erreur}</ErrorMessage>}
-          <Button onClick={verifierReponse}>Vérifier la réponse</Button>
-          <Button onClick={closeModal}>Fermer</Button>
-        </ModalContainer>
-      )}
-
-      <ResetButton onClick={resetGame}>Réinitialiser le jeu, ne le fait pas chacal</ResetButton>
-
-      {hasWon && <CongratulationMessage>Félicitations ! Envoie fesses et bon retour🎉</CongratulationMessage>}
     </Container>
   );
 }
