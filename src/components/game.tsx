@@ -59,34 +59,38 @@ const Subtitle = styled.h3`
 `;
 
 export default function CountdownPage() {
-  // Essayons de récupérer la valeur du compteur dans le localStorage
   const storedTimeLeft = localStorage.getItem("timeLeft");
+  const storedEndTime = localStorage.getItem("endTime");
 
-  const [timeLeft, setTimeLeft] = useState<number>(
-    storedTimeLeft ? parseInt(storedTimeLeft) : 24 * 60 * 60 * 1000 // 24 heures en millisecondes
+  // Si une fin de compte à rebours est enregistrée dans le localStorage, on l'utilise
+  const [endTime, setEndTime] = useState<number>(
+    storedEndTime ? parseInt(storedEndTime) : Date.now() + 24 * 60 * 60 * 1000 // 24 heures par défaut
   );
 
+  const [timeLeft, setTimeLeft] = useState<number>(endTime - Date.now());
+
   useEffect(() => {
-    // Si le temps restant est supérieur à 0, commence le décompte
-    if (timeLeft > 0) {
-      const intervalId = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= 0) {
-            clearInterval(intervalId);
-            return 0;
-          }
-          const newTime = prevTime - 1000;
-          // Sauvegarde la nouvelle valeur dans le localStorage à chaque tick
-          localStorage.setItem("timeLeft", newTime.toString());
-          return newTime;
-        });
-      }, 1000);
+    const intervalId = setInterval(() => {
+      const currentTime = Date.now();
+      const remainingTime = endTime - currentTime;
 
-      return () => clearInterval(intervalId);  // Cleanup lors du démontage du composant
+      if (remainingTime <= 0) {
+        clearInterval(intervalId); // Arrête le décompte une fois terminé
+      }
+
+      setTimeLeft(remainingTime);
+      localStorage.setItem("timeLeft", remainingTime.toString());
+    }, 1000);
+
+    // Sauvegarde l'heure de fin du décompte dans localStorage si ce n'est pas encore fait
+    if (!storedEndTime) {
+      localStorage.setItem("endTime", endTime.toString());
     }
-  }, [timeLeft]); // Le useEffect se réexécutera chaque fois que `timeLeft` change
 
-  const formatTime = (ms: number) => {  // Déclaration du type du paramètre ms
+    return () => clearInterval(intervalId);  // Cleanup lors du démontage du composant
+  }, [endTime]);
+
+  const formatTime = (ms: number) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
     const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((ms % (1000 * 60)) / 1000);
@@ -98,7 +102,7 @@ export default function CountdownPage() {
   return (
     <Container>
       <Header>Souviens-toi de nous</Header>
-      <Subtitle>Hellooow mon ex pref.. <br></br>Le jeu commence dans :</Subtitle>
+      <Subtitle>Hellooow mon ex pref.. <br /> Le jeu commence dans :</Subtitle>
       <CountdownTimer>
         <CountdownText>{formatTime(timeLeft)}</CountdownText>
       </CountdownTimer>
