@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 
 // Animation de l'avion
@@ -9,7 +9,7 @@ const flyAnimation = keyframes`
 
 const PlaneContainer = styled.div`
   position: fixed;
-  top: 20%;
+  top: 10%;
   left: -100px;
   display: flex;
   align-items: center;
@@ -29,7 +29,7 @@ const AirportBackground = styled.div`
   left: 0;
   width: 100%;
   height: 200px;
-  background: url('/airport.png') no-repeat center bottom;
+  background: url('/airport-silhouette.png') no-repeat center bottom;
   background-size: cover;
   opacity: 1;
   z-index: 1;
@@ -70,68 +70,83 @@ const Header = styled.header`
   box-sizing: border-box;
 `;
 
-const CountdownTimer = styled.div`
-  font-size: 3rem;
-  color: #ff4b5c;
-  font-weight: bold;
-  background-color: white;
+const MemoryGameContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 20px;
   padding: 20px;
+  background: white;
   border-radius: 15px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  z-index: 2;
 `;
 
-const CountdownText = styled.h2`
+const Card = styled.div`
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ff4b5c;
+  color: white;
   font-size: 2rem;
-  color: #333;
-  margin-bottom: 20px;
-  z-index: 2;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
 `;
 
-const Subtitle = styled.h3`
-  font-size: 1.5rem;
-  color: #ffffff;
-  margin-bottom: 20px;
-  z-index: 2;
-`;
+const images: string[] = [
+  "/IMG_4118.jpg",
+  "/IMG_4119.jpg",
+  "/IMG_4120.jpg",
+  "/IMG_4121.jpg",
+  "/IMG_4122.jpg",
+  "/IMG_4123.jpg",
+  "/IMG_4124.jpg",
+  "/IMG_4125.jpg"
+];
+const shuffledCards: string[] = [...images, ...images].sort(() => Math.random() - 0.5);
 
 export default function CountdownPage() {
-  const storedEndTime = localStorage.getItem("endTime");
-  const [endTime, setEndTime] = useState<number>(
-    storedEndTime ? parseInt(storedEndTime) : Date.now() + 24 * 60 * 60 * 1000
-  );
-  const [timeLeft, setTimeLeft] = useState<number>(endTime - Date.now());
+  const [selectedCards, setSelectedCards] = useState<number[]>([]);
+  const [matchedCards, setMatchedCards] = useState<number[]>([]);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const currentTime = Date.now();
-      const remainingTime = endTime - currentTime;
-      if (remainingTime <= 0) clearInterval(intervalId);
-      setTimeLeft(remainingTime);
-    }, 1000);
-
-    if (!storedEndTime) localStorage.setItem("endTime", endTime.toString());
-    return () => clearInterval(intervalId);
-  }, [endTime]);
-
-  const formatTime = (ms: number) => {
-    const hours = Math.floor(ms / (1000 * 60 * 60));
-    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((ms % (1000 * 60)) / 1000);
-    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  const handleCardClick = (index: number) => {
+    if (selectedCards.length === 2 || selectedCards.includes(index)) return;
+    
+    const newSelection = [...selectedCards, index];
+    setSelectedCards(newSelection);
+    
+    if (newSelection.length === 2) {
+      setTimeout(() => {
+        if (shuffledCards[newSelection[0]] === shuffledCards[newSelection[1]]) {
+          setMatchedCards([...matchedCards, ...newSelection]);
+        }
+        setSelectedCards([]);
+      }, 1000);
+    }
   };
 
   return (
     <Container>
       <Header>Souviens-toi de nous</Header>
-      <Subtitle>Hellooow mon ex pref.. <br /> Le jeu commence dans :</Subtitle>
-      <CountdownTimer>
-        <CountdownText>{formatTime(timeLeft)}</CountdownText>
-      </CountdownTimer>
-      <PlaneContainer>
-        ✈️ Bonne escale à Istanbul petite chinoise ✈️
-      </PlaneContainer>
+      {/* <PlaneContainer>
+        ✈️ Bonne escale à Istanbul ✈️
+      </PlaneContainer> */}
       <AirportBackground />
+      <h2>Histoire d'oublier un peu les turbulances hehe</h2>
+      <MemoryGameContainer>
+        {shuffledCards.map((image, index) => (
+          <Card key={index} onClick={() => handleCardClick(index)}>
+            {(selectedCards.includes(index) || matchedCards.includes(index)) ? (
+              <img src={image} alt="Memory card" style={{ width: "100%", height: "100%", borderRadius: "10px" }} />
+            ) : (
+              "❓"
+            )}
+          </Card>
+        ))}
+      </MemoryGameContainer>
     </Container>
   );
 }
