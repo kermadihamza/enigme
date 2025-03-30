@@ -25,12 +25,13 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+  background: linear-gradient(135deg, #fe4a49 0%, #f6a5c0 100%);  // Dégradé de couleur comme Tinder
   font-family: 'Poppins', sans-serif;
   padding: 20px;
   color: #333;
   text-align: center;
 `;
+
 
 const Header = styled.header`
   width: 100%;
@@ -39,19 +40,24 @@ const Header = styled.header`
   color: white;
   font-size: 2rem;
   font-weight: bold;
-  text-align: center;
+  text-align: center; /* Centre le texte horizontalement */
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin: 0; /* Évite toute marge par défaut */
   position: fixed;
   top: 0;
   left: 0;
   z-index: 10;
-  background-color: #ff4b5c;
+  display: flex;
+  justify-content: center; /* Centre le contenu horizontalement */
+  align-items: center; /* Centre le contenu verticalement */
+  height: 80px; /* Ajuste la hauteur si nécessaire */
+  box-sizing: border-box; /* Assure que padding et bordure ne modifient pas la largeur totale */
 `;
+
 
 const Section = styled.section`
   width: 100%;
-  max-width: 500px;
+  max-width: 350px;
   margin-top: 80px; /* Ajout d'un espacement pour le header fixe */
   padding: 20px;
   background: white;
@@ -63,7 +69,9 @@ const Title = styled.h1`
   font-size: 2rem;
   color: #ff4b5c;
   margin-bottom: 20px;
+  text-align: center;  /* Centrer le texte */
 `;
+
 
 const Question = styled.h2`
   font-size: 1.5rem;
@@ -72,7 +80,7 @@ const Question = styled.h2`
 `;
 
 const Input = styled.input`
-  width: 100%;
+  width: 90%;
   padding: 10px;
   font-size: 1rem;
   border: 2px solid #ff4b5c;
