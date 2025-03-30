@@ -151,7 +151,7 @@ export default function EnigmeGame() {
 
   return (
     <Container>
-      <Header>Souviens-toi de nous 🔍</Header> {/* Nouveau header */}
+      <Header>Souviens-toi de nous</Header> {/* Nouveau header */}
       <Section>
         <Question>{enigmes[index].question}</Question>
         <Input 
