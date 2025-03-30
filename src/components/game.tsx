@@ -32,7 +32,7 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80px;
+  height: 100px;
   box-sizing: border-box;
 `;
 
@@ -91,7 +91,7 @@ export default function CountdownPage() {
 
   return (
     <Container>
-      <Header>Helloow Marine aka mon ex pref, le jeu commence dans :</Header>
+      <Header>Helloow mon ex pref, le jeu commence dans :</Header>
       <CountdownTimer>
         <CountdownText>{formatTime(timeLeft)}</CountdownText>
       </CountdownTimer>
