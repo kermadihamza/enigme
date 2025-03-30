@@ -32,7 +32,7 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px;
+  height: 80px;
   box-sizing: border-box;
 `;
 
@@ -49,6 +49,12 @@ const CountdownTimer = styled.div`
 const CountdownText = styled.h2`
   font-size: 2rem;
   color: #333;
+  margin-bottom: 20px;
+`;
+
+const Subtitle = styled.h3`
+  font-size: 1.5rem;
+  color: #ffffff;
   margin-bottom: 20px;
 `;
 
@@ -91,7 +97,8 @@ export default function CountdownPage() {
 
   return (
     <Container>
-      <Header>Helloow mon ex pref, le jeu commence dans :</Header>
+      <Header>Souviens-toi de nous</Header>
+      <Subtitle>Hellooow mon ex pref.. <br></br>Le jeu commence dans :</Subtitle>
       <CountdownTimer>
         <CountdownText>{formatTime(timeLeft)}</CountdownText>
       </CountdownTimer>
