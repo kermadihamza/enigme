@@ -17,11 +17,12 @@ const FelicitationsPakistan = () => {
       {/* Contenu principal avec photo qui prend tout l'écran */}
       <div className="flex flex-col items-center justify-center h-full absolute top-0 left-0 w-full">
         <img
-          src="/mariage.jpg" // Remplace par le chemin réel de l'image
+          src="/mariage.JPG" // Remplace par le chemin réel de l'image
           alt="Les Mariés"
           className="object-cover w-full h-full absolute top-0 left-0"
         />
         
+
       </div>
     </div>
   );
