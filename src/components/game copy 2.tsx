@@ -28,19 +28,6 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const ContainerError = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: #000000;
-  font-family: 'Poppins', sans-serif;
-  padding: 20px;
-  color: #333;
-  text-align: center;
-`;
-
 
 
 const Header = styled.header`
@@ -131,7 +118,7 @@ const Input = styled.input`
 
 const Button = styled.button`
   padding: 12px;
-  background: #000000;
+  background: #ff4b5c;
   color: white;
   border: none;
   border-radius: 8px;
@@ -142,14 +129,10 @@ const Button = styled.button`
   transition: background 0.3s ease;
 
   &:hover {
-    background: #ffffff;
+    background: #e43a4e;
   }
 `;
-const ErrorMessage = styled.p`
-  color: #da291c;
-  font-weight: bold;
-  margin-top: 10px;
-`;
+
 const ResetButton = styled(Button)`
   background: #555;
   margin-top: 10px;
@@ -168,7 +151,7 @@ const CongratulationMessage = styled.div`
 `;
 
 const GlitchText = styled.h1`
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: bold;
   text-transform: uppercase;
   position: relative;
@@ -284,42 +267,26 @@ function EnigmeGame() {
 
 export default function SecretPage() {
   const [input, setInput] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Ajout d'un état pour l'erreur
   const [unlocked, setUnlocked] = useState(false);
   const secretWord = "Global Village";
-
-  // Vérifie si la page a déjà été débloquée
-  useEffect(() => {
-    const isUnlocked = localStorage.getItem("pageUnlocked");
-    if (isUnlocked) {
-      setUnlocked(true);
-    }
-  }, []);
-
 
   const handleUnlock = () => {
     if (input.toLowerCase().trim() === secretWord.toLowerCase()) {
       console.log("Mot correct !");
       setUnlocked(true);
-      localStorage.setItem("pageUnlocked", "true");  // Marquer la page comme débloquée
-      setErrorMessage(""); // Réinitialiser le message d'erreur si le mot est correct
     } else {
       console.log("Mauvais mot...");
-      setErrorMessage("Beurk, tu pues des fesses... essaye encore !"); // Afficher le message d'erreur si le mot est incorrect
     }
   };
-
 
   if (unlocked) {
     return <EnigmeGame />; // Retourne le jeu d'énigmes si le mot est correct
   }
 
   return (
-    <ContainerError>
+    <Container>
       <GlitchText>Error GV-2025 - Lost in the desert</GlitchText>
-      <p style={{ color: 'white' }}>
-  Where do all the cultures meet in the desert? The answer is closer than you think—maybe the title holds the key.
-</p>
+      <p>Where do all the cultures meet in the desert? The answer is closer than you think—maybe the title holds the key.</p>
       <Input
         type="text"
         value={input}
@@ -327,7 +294,6 @@ export default function SecretPage() {
         placeholder="Secret word"
       />
       <Button onClick={handleUnlock}>❓🔑</Button>
-      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Affichage du message d'erreur */}
-    </ContainerError>
+    </Container>
   );
 }
