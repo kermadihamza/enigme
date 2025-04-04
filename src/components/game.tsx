@@ -305,7 +305,7 @@ export default function SecretPage() {
       setErrorMessage(""); // Réinitialiser le message d'erreur si le mot est correct
     } else {
       console.log("Mauvais mot...");
-      setErrorMessage("Beurk, tu pues des fesses... essaye encore !"); // Afficher le message d'erreur si le mot est incorrect
+      setErrorMessage("Beurk ma'am, You stink like butt cheeks... try again! 🤢");
     }
   };
 
