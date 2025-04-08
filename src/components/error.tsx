@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-// Liste des énigmes
+// Page d'énigme
 const enigmes = [
   { question: "De quelle couleur était le pantalon que tu portais lors de notre première fois ?", reponse: "Vert" },
   { question: "Cette chanson nous rappelle notre histoire. Quel est le titre de notre musique ?", reponse: "Pour moi" },
@@ -27,6 +27,21 @@ const Container = styled.div`
   color: #333;
   text-align: center;
 `;
+
+const ContainerError = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #000000;
+  font-family: 'Poppins', sans-serif;
+  padding: 20px;
+  color: #333;
+  text-align: center;
+`;
+
+
 
 const Header = styled.header`
   width: 100%;
@@ -116,7 +131,7 @@ const Input = styled.input`
 
 const Button = styled.button`
   padding: 12px;
-  background: #ff4b5c;
+  background: #000000;
   color: white;
   border: none;
   border-radius: 8px;
@@ -127,10 +142,14 @@ const Button = styled.button`
   transition: background 0.3s ease;
 
   &:hover {
-    background: #e43a4e;
+    background: #ffffff;
   }
 `;
-
+const ErrorMessage = styled.p`
+  color: #da291c;
+  font-weight: bold;
+  margin-top: 10px;
+`;
 const ResetButton = styled(Button)`
   background: #555;
   margin-top: 10px;
@@ -148,7 +167,22 @@ const CongratulationMessage = styled.div`
   margin-top: 20px;
 `;
 
-export default function EnigmeGame() {
+const GlitchText = styled.h1`
+  font-size: 3rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  position: relative;
+  color: red;
+  text-shadow: 3px 3px 0px #ff0000, -3px -3px 0px #00ff00;
+  animation: glitch 0.75s infinite alternate;
+
+  @keyframes glitch {
+    0% { transform: translate(2px, -2px); }
+    100% { transform: translate(-2px, 2px); }
+  }
+`;
+
+function EnigmeGame() {
   const storedIndex = localStorage.getItem("enigmeIndex");
   const [index, setIndex] = useState(() => storedIndex ? parseInt(storedIndex) : 0);
   const [reponse, setReponse] = useState("");
@@ -245,5 +279,55 @@ export default function EnigmeGame() {
         {message && <CongratulationMessage>{message}</CongratulationMessage>}
       </Section>
     </Container>
+  );
+}
+
+export default function SecretPage() {
+  const [input, setInput] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Ajout d'un état pour l'erreur
+  const [unlocked, setUnlocked] = useState(false);
+  const secretWord = "Global Village";
+
+  // Vérifie si la page a déjà été débloquée
+  useEffect(() => {
+    const isUnlocked = localStorage.getItem("pageUnlocked");
+    if (isUnlocked) {
+      setUnlocked(true);
+    }
+  }, []);
+
+
+  const handleUnlock = () => {
+    if (input.toLowerCase().trim() === secretWord.toLowerCase()) {
+      console.log("Mot correct !");
+      setUnlocked(true);
+      localStorage.setItem("pageUnlocked", "true");  // Marquer la page comme débloquée
+      setErrorMessage(""); // Réinitialiser le message d'erreur si le mot est correct
+    } else {
+      console.log("Mauvais mot...");
+      setErrorMessage("Beurk ma'am, You stink like butt cheeks... try again! 🤢");
+    }
+  };
+
+
+  if (unlocked) {
+    return <EnigmeGame />; // Retourne le jeu d'énigmes si le mot est correct
+  }
+
+  return (
+    <ContainerError>
+      <GlitchText>Error GV-2025 - Lost in the desert</GlitchText>
+      <p style={{ color: 'white' }}>
+  Where do all the cultures meet in the desert? The answer is closer than you think—maybe the title holds the key.
+</p>
+      <Input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Secret word"
+      />
+      <Button onClick={handleUnlock}>❓🔑</Button>
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Affichage du message d'erreur */}
+    </ContainerError>
   );
 }
