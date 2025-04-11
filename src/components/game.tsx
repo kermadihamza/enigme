@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 // Liste des énigmes
 const enigmes = [
-  { question: "Quel artiste on a vu en premier aux Ardentes ?", reponse: "Niro" }
+  { question: "Quel artiste on a vu en premier aux Ardentes ?", reponse: "Niro" },
   { question: "Le jour ou on m'a enlevé le platre, j'avais le short de quelle équipe de foot ?", reponse: "Anderlecht" }
 ];
 
@@ -233,7 +233,7 @@ export default function EnigmeGame() {
         ) : (
           <>
             <p>Tu dois attendre {hours}h {minutes}m {seconds}s avant de répondre à la prochaine question.</p>
-            <ResetButton onClick={resetGame}>Réinitialiser; TOUCHE PAS MA'AM !</ResetButton>
+            <ResetButton onClick={resetGame}>Réinitialiser; TOUCHE PAS MA'AM</ResetButton>
 
           </>
         )}
