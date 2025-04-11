@@ -233,7 +233,7 @@ export default function EnigmeGame() {
         ) : (
           <>
             <p>Tu dois attendre {hours}h {minutes}m {seconds}s avant de répondre à la prochaine question.</p>
-            <ResetButton onClick={resetGame}>Réinitialiser; TOUCHE PAS MA'AM</ResetButton>
+            <ResetButton onClick={resetGame}>Réinitialiser; TOUCHE PAS MA'AM !</ResetButton>
 
           </>
         )}
