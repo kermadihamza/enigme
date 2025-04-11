@@ -3,10 +3,8 @@ import styled from "styled-components";
 
 // Liste des énigmes
 const enigmes = [
-  { question: "Mais c'est qui ... ?", reponse: "Aly" },
-  { question: "Le premier jeudi où je suis venu faire une soirée jeux de sociétés, qu'est-ce que j'ai été acheter au carrefour et que je n'ai pas utilisé ?", reponse: "Capotes" },
-  { question: "Dans quel parc avons-nous fait une longue balade ensemble lors de notre première sortie ?", reponse: "Parc du Cinquantenaire" },
   { question: "Quel artiste on a vu en premier aux Ardentes ?", reponse: "Niro" }
+  { question: "Le jour ou on m'a enlevé le platre, j'avais le short de quelle équipe de foot ?", reponse: "Anderlecht" }
 ];
 
 // Styles
@@ -162,7 +160,7 @@ export default function EnigmeGame() {
     }
   }, [lastAnsweredTime]);
 
-  const canAnswer = lastAnsweredTime ? Date.now() - parseInt(lastAnsweredTime) >= 12 * 60 * 60 * 1000 : true;
+  const canAnswer = lastAnsweredTime ? Date.now() - parseInt(lastAnsweredTime) >= 3 * 60 * 60 * 1000 : true;
 
   const verifierReponse = () => {
     if (reponse.trim().toLowerCase() === enigmes[index].reponse.toLowerCase()) {
@@ -196,7 +194,7 @@ export default function EnigmeGame() {
     ? Math.max(
         0,
         Math.ceil(
-          (12 * 60 * 60 * 1000 - (Date.now() - parseInt(lastAnsweredTime))) / 1000
+          (3 * 60 * 60 * 1000 - (Date.now() - parseInt(lastAnsweredTime))) / 1000
         )
       )
     : 0;
@@ -210,7 +208,7 @@ export default function EnigmeGame() {
       <Header>Souviens-toi de nous</Header>
       <SubTitle>
         <p>
-          Une question par jour ! Tu as 12 heures pour répondre à chaque question. 
+          Une question par jour ! Tu as 3 heures pour répondre à chaque question. 
           Si tu veux un indice, tu peux me demander à tout moment.
         </p>
         <p>
