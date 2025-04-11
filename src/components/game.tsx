@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 // Liste des énigmes
 const enigmes = [
-  { question: "Quel artiste on a vu en premier aux Ardentes ?", reponse: "Niro" },
   { question: "Le jour ou on m'a enlevé le platre, j'avais le short de quelle équipe de foot ?", reponse: "Anderlecht" }
 ];
 
@@ -28,18 +27,16 @@ const Header = styled.header`
   color: white;
   font-size: 2rem;
   font-weight: bold;
-  text-align: center; /* Centre le texte horizontalement */
-  border-radius: 10px;
-  margin: 0; /* Évite toute marge par défaut */
+  text-align: center;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 10;
   display: flex;
-  justify-content: center; /* Centre le contenu horizontalement */
-  align-items: center; /* Centre le contenu verticalement */
-  height: 80px; /* Ajuste la hauteur si nécessaire */
-  box-sizing: border-box; /* Assure que padding et bordure ne modifient pas la largeur totale */
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  box-sizing: border-box;
 `;
 
 const Section = styled.section`
@@ -139,6 +136,77 @@ const CongratulationMessage = styled.div`
   font-weight: bold;
   text-align: center;
   margin-top: 20px;
+  animation: fadeIn 2s ease-in-out;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
+const CinematicBox = styled.div`
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  overflow: hidden;
+`;
+
+const CinematicText = styled.div`
+  font-size: 1.5rem;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 90vw; /* Restreindre la largeur du texte */
+  padding: 10px;
+  box-sizing: border-box;
+  animation: scrollUp 20s linear infinite;
+
+  @keyframes scrollUp {
+    0% {
+      transform: translate3d(0, 100%, 0); /* Utiliser translate3d pour plus de fluidité */
+    }
+    100% {
+      transform: translate3d(0, -100%, 0); /* Éviter le flou en Y */
+    }
+  }
+
+  p {
+    margin: 10px 0;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+    padding: 10px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  /* Ajustements pour les grands écrans comme l'iPhone 14 et 15 Pro Max (screen width 430px et plus) */
+  @media (max-width: 420px) {
+    font-size: 0.9rem; /* Réduire un peu la taille du texte */
+    padding: 5px 10px;
+    max-width: 80vw; /* Élargir légèrement la largeur du texte */
+  }
+
+  @media (min-width: 421px) and (max-width: 600px) {
+    font-size: 1.1rem; /* Taille légèrement plus grande pour des écrans moyens */
+    padding: 10px;
+    max-width: 90vw; /* Largeur encore plus grande pour des écrans plus grands */
+  }
 `;
 
 export default function EnigmeGame() {
@@ -149,6 +217,7 @@ export default function EnigmeGame() {
   const [lastAnsweredTime, setLastAnsweredTime] = useState<string | null>(
     localStorage.getItem("lastAnsweredTime")
   );
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("enigmeIndex", index.toString());
@@ -164,21 +233,26 @@ export default function EnigmeGame() {
 
   const verifierReponse = () => {
     if (reponse.trim().toLowerCase() === enigmes[index].reponse.toLowerCase()) {
+      // Bonne réponse
       setMessage("Bonne réponse wesh, envoie fesse a kermadi2 pour fêter ça ! 🎉");
       setLastAnsweredTime(Date.now().toString());
       localStorage.setItem("lastAnsweredTime", Date.now().toString());
+  
       setTimeout(() => {
-        setMessage("");
         setReponse("");
+  
         if (index < enigmes.length - 1) {
+          setMessage(""); // Effacer le message avant de passer à la question suivante
           setIndex(index + 1);
         } else {
-          setMessage("Félicitations, tu as fini toutes les énigmes ! 🎊");
+          // Game Over: Afficher le texte cinématique de fin
+          setGameOver(true);
         }
-      }, 5000);
+      }, 5000); // Temps d'attente avant de passer à la question suivante
     } else {
+      // Mauvaise réponse
       setMessage("Mauvaise réponse chacal, réessaie tching tchang tchong ! ❌");
-      setTimeout(() => setMessage(""), 3000);
+      setTimeout(() => setMessage(""), 3000); // Effacer le message après 3 secondes
     }
   };
 
@@ -188,57 +262,51 @@ export default function EnigmeGame() {
     setReponse("");
     setLastAnsweredTime(null);
     localStorage.removeItem("lastAnsweredTime");
+    setGameOver(false);
   };
-
-  const remainingTime = lastAnsweredTime
-    ? Math.max(
-        0,
-        Math.ceil(
-          (3 * 60 * 60 * 1000 - (Date.now() - parseInt(lastAnsweredTime))) / 1000
-        )
-      )
-    : 0;
-
-  const hours = Math.floor(remainingTime / 3600);
-  const minutes = Math.floor((remainingTime % 3600) / 60);
-  const seconds = remainingTime % 60;
 
   return (
     <Container>
       <Header>Souviens-toi de nous</Header>
-      <SubTitle>
-        <p>
-          Une question par jour ! Tu as 3 heures pour répondre à chaque question. 
-          Si tu veux un indice, tu peux me demander à tout moment.
-        </p>
-        <p>
-          Si tu réussis toutes les énigmes, tu gagneras une soirée ou un week-end 
-          totalement organisé par moi ! <span>Tout dépendra de ta gentillesse 🎉</span>
-        </p>
-      </SubTitle>
-      <Section>
-        <Title>Question {index + 1}</Title>
-        <Question isBlurred={!canAnswer}>{enigmes[index].question}</Question>
-        {canAnswer ? (
-          <>
-            <Input
-              type="text"
-              value={reponse}
-              onChange={(e) => setReponse(e.target.value)}
-              placeholder="Ta réponse..."
-            />
-            <Button onClick={verifierReponse}>Valider</Button>
-            <ResetButton onClick={resetGame}>Réinitialiser; TOUCHE PAS MA'AM</ResetButton>
-          </>
-        ) : (
-          <>
-            <p>Tu dois attendre {hours}h {minutes}m {seconds}s avant de répondre à la prochaine question.</p>
-            <ResetButton onClick={resetGame}>Réinitialiser; TOUCHE PAS MA'AM</ResetButton>
+      {!gameOver && (
+        <Section>
+          <Title>Question {index + 1}</Title>
+          <Question isBlurred={false}>{enigmes[index].question}</Question>
 
-          </>
-        )}
-        {message && <CongratulationMessage>{message}</CongratulationMessage>}
-      </Section>
+          {canAnswer ? (
+            <>
+              <Input
+                type="text"
+                value={reponse}
+                onChange={(e) => setReponse(e.target.value)}
+                placeholder="Ta réponse..."
+              />
+              <Button onClick={verifierReponse}>Valider</Button>
+              <ResetButton onClick={resetGame}>Réinitialiser; TOUCHE PAS MA'AM</ResetButton>
+            </>
+          ) : (
+            <>
+              <ResetButton onClick={resetGame}>Réinitialiser; TOUCHE PAS MA'AM</ResetButton>
+            </>
+          )}
+
+          {/* Affichage du message, qu'il soit bon ou mauvais */}
+          {message && <CongratulationMessage>{message}</CongratulationMessage>}
+        </Section>
+      )}
+
+      {gameOver && (
+          <CinematicText>
+            <p>Tu as résolu la dernière énigme...</p>
+            <br />
+            <p><strong>Mais le vrai voyage, <br /> il commence quand tu rentres...</strong></p>
+            <p>Merci d’avoir partagé tous <br />ces moments avec moi,</p>
+            <p>Chaque question était un souvenir <br />qu'on avait en commun,</p>
+            <p>Chaque réponse, même facile, <br />est un pas vers peut-être un futur nous...</p>
+            <br />
+            <p>J'espère qu'on s'en rappellera, <br />peu importe où la vie nous mène...</p>
+            <p><strong>Prépare ton sac et choisis week-end <br />ou nous pourrons partir fêter cette victoire💫</strong></p>          </CinematicText>
+      )}
     </Container>
   );
 }
