@@ -3,8 +3,6 @@ import styled from "styled-components";
 
 // Liste des énigmes
 const enigmes = [
-  { question: "L", reponse: "Anderlecht" },
-  { question: "L", reponse: "Anderlecht" },
   { question: "Le jour ou on m'a enlevé le platre, j'avais le short de quelle équipe de foot ?", reponse: "Anderlecht" }
 ];
 
